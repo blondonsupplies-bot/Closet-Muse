@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#6f7b62" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="ClosetMuse" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+  <title>ClosetMuse</title>
+  <style>
+    :root{
+      --bg:#f7f3ee; --card:#fffdf9; --ink:#24221f; --muted:#817a70;
+      --accent:#6f7b62; --accent2:#d8c4b0; --line:#e8e0d7;
+      --shadow:0 12px 35px rgba(61,49,38,.10); --danger:#8b4d49;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#f3eee8,#faf8f5);color:var(--ink)}
+    button,input,select,textarea{font:inherit}
+    .app{max-width:460px;margin:0 auto;min-height:100vh;background:var(--bg);position:relative;padding-bottom:calc(92px + env(safe-area-inset-bottom));box-shadow:0 0 60px rgba(0,0,0,.06)}
+    header{padding:calc(18px + env(safe-area-inset-top)) 20px 10px;position:sticky;top:0;background:rgba(247,243,238,.92);backdrop-filter:blur(12px);z-index:10}
+    .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.16em;color:var(--muted)}
+    h1{font-family:Georgia,serif;margin:4px 0 0;font-size:31px;font-weight:500}
+    .sub{color:var(--muted);font-size:14px;margin-top:5px}
+    main{padding:10px 16px 24px}
+    .hero{background:linear-gradient(135deg,#6f7b62,#8c967f);color:white;border-radius:24px;padding:22px;box-shadow:var(--shadow);margin-bottom:18px;overflow:hidden;position:relative}
+    .hero:after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.10);right:-55px;top:-55px}
+    .hero h2{margin:0 0 8px;font-family:Georgia,serif;font-size:26px;font-weight:500}.hero p{margin:0 0 16px;color:#f1f3ed;font-size:14px;max-width:300px}
+    .btn{border:0;border-radius:14px;padding:12px 16px;cursor:pointer;font-weight:700}.btn.light{background:white;color:#59624f}.btn.primary{background:var(--accent);color:white}.btn.ghost{background:#eee8e1;color:#4f4b46}.btn.danger{background:#f5e8e6;color:var(--danger)}
+    .btn:disabled{opacity:.55;cursor:default}
+    .section-head{display:flex;justify-content:space-between;align-items:center;margin:18px 2px 10px}.section-head h3{font-family:Georgia,serif;font-size:21px;margin:0}.section-head span{font-size:13px;color:var(--muted)}
+    .filters{display:flex;gap:8px;overflow:auto;padding:2px 0 8px;scrollbar-width:none}.chip{white-space:nowrap;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-size:13px;color:#5a554f;cursor:pointer}.chip.active{background:var(--accent);color:white;border-color:var(--accent)}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.item{background:var(--card);border-radius:20px;padding:10px;border:1px solid var(--line);box-shadow:0 7px 18px rgba(58,49,43,.05);position:relative}
+    .thumb{aspect-ratio:1/1;background:#eee7df;border-radius:15px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}.thumb img{width:100%;height:100%;object-fit:cover}.emoji{font-size:58px}.item .name{font-weight:700;font-size:14px;margin:9px 4px 2px}.meta{color:var(--muted);font-size:12px;margin:0 4px 2px}
+    .delete{position:absolute;right:14px;top:14px;width:30px;height:30px;border:0;border-radius:999px;background:rgba(255,255,255,.88);font-size:16px;cursor:pointer}
+    .outfit-card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:14px;margin-bottom:12px}.outfit-items{display:flex;gap:8px;margin-bottom:10px}.mini{flex:1;aspect-ratio:1;background:#eee8e1;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:32px;overflow:hidden}.mini img{width:100%;height:100%;object-fit:cover}.outfit-title{font-weight:800}.outfit-note{font-size:12px;color:var(--muted);margin-top:3px}
+    .bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(460px,100%);background:rgba(255,253,249,.96);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:10px 12px calc(10px + env(safe-area-inset-bottom));backdrop-filter:blur(12px);z-index:20}.nav{background:none;border:0;color:#8a847d;padding:7px 0;cursor:pointer;font-size:11px}.nav b{display:block;font-size:20px;margin-bottom:2px}.nav.active{color:var(--accent)}
+    .screen{display:none}.screen.active{display:block}
+    .form,.panel{background:var(--card);border-radius:22px;border:1px solid var(--line);padding:16px}.field{margin-bottom:14px}.field label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:13px;padding:12px;background:white;outline:none}
+    .upload{border:2px dashed #cabeb1;border-radius:18px;padding:22px;text-align:center;background:#faf7f3;cursor:pointer}.upload-preview{margin-top:10px;max-height:220px;border-radius:14px;max-width:100%}
+    .builder{display:grid;grid-template-columns:1fr 1fr;gap:10px}.slot{background:var(--card);border:1px dashed #cabeb1;border-radius:18px;min-height:155px;padding:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer}.slot .slotimg{width:100%;height:110px;object-fit:cover;border-radius:12px}.slot .big{font-size:46px}.slot span{font-size:12px;color:var(--muted);margin-top:6px}.actions{display:flex;gap:10px;margin-top:14px}.actions .btn{flex:1}
+    .modal{position:fixed;inset:0;background:rgba(27,24,21,.45);display:none;align-items:flex-end;justify-content:center;z-index:100}.modal.show{display:flex}.sheet{width:min(460px,100%);max-height:76vh;overflow:auto;background:var(--bg);border-radius:26px 26px 0 0;padding:18px 16px 28px}.sheet h3{font-family:Georgia,serif;margin:0 0 12px}.picker{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.pick{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:8px;cursor:pointer}.pick .mini{width:100%;aspect-ratio:1}.pick p{font-size:11px;margin:6px 2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .empty{padding:28px 12px;text-align:center;color:var(--muted);font-size:14px}.toast{position:fixed;bottom:112px;left:50%;transform:translateX(-50%);background:#2e312b;color:white;padding:10px 14px;border-radius:12px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;z-index:200}.toast.show{opacity:1}
+    .share-status{display:flex;gap:10px;align-items:center;padding:12px;border-radius:16px;background:#f3efe9;margin-bottom:14px}.dot{width:10px;height:10px;border-radius:50%;background:#b3aaa0;flex:0 0 auto}.dot.on{background:#687b5c}.share-status b{font-size:14px}.share-status div div{font-size:12px;color:var(--muted);margin-top:2px}
+    .share-actions{display:grid;gap:10px}.share-actions .btn{width:100%}.share-link{font-size:12px;line-height:1.45;word-break:break-all;background:#f7f4ef;border:1px solid var(--line);padding:11px;border-radius:12px;margin-top:12px;color:#635c55}
+    .privacy{font-size:12px;line-height:1.5;color:var(--muted);margin-top:14px}.privacy strong{color:#5d574f}
+    .read-banner{display:none;background:#eee8df;border-radius:18px;padding:14px;margin-bottom:14px;font-size:13px;color:#5a554f}
+    .loading{opacity:.65;pointer-events:none}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="eyebrow">Your digital wardrobe</div>
+    <h1>ClosetMuse</h1>
+    <div class="sub" id="subtitle">Build looks from what you already own.</div>
+  </header>
+
+  <main>
+    <div class="read-banner" id="readBanner"><b>Shared wardrobe</b><br>This is a read-only view of a ClosetMuse wardrobe.</div>
+
+    <section id="closet" class="screen active">
+      <div class="hero">
+        <h2>Your closet, styled.</h2>
+        <p>Upload your wardrobe once, then mix, match, save, and share it for personal styling.</p>
+        <button class="btn light owner-only" onclick="go('add')">＋ Add an item</button>
+      </div>
+      <div class="section-head"><h3>My closet</h3><span id="count"></span></div>
+      <div class="filters" id="filters"></div>
+      <div class="grid" id="closetGrid"></div>
+    </section>
+
+    <section id="add" class="screen owner-only">
+      <div class="section-head"><h3>Add clothing</h3><span>Upload + tag</span></div>
+      <div class="form">
+        <div class="field"><label>Photo</label><div class="upload" onclick="document.getElementById('photo').click()">📸<br><b>Choose a clothing photo</b><br><small>Photos are compressed before saving</small><input id="photo" type="file" accept="image/*" capture="environment" hidden onchange="preview(event)"><br><img id="preview" class="upload-preview" style="display:none"></div></div>
+        <div class="field"><label>Item name</label><input id="name" placeholder="e.g. Linen white shirt"></div>
+        <div class="field"><label>Category</label><select id="category"><option>Top</option><option>Bottom</option><option>Dress</option><option>Shoes</option><option>Outerwear</option><option>Bag</option><option>Accessory</option></select></div>
+        <div class="field"><label>Color</label><input id="color" placeholder="e.g. White"></div>
+        <div class="field"><label>Occasion</label><select id="occasion"><option>Everyday</option><option>Work</option><option>Going out</option><option>Vacation</option><option>Formal</option><option>Workout</option></select></div>
+        <div class="field"><label>Notes (optional)</label><input id="notes" placeholder="e.g. cropped, warm weather, fits oversized"></div>
+        <button class="btn primary" style="width:100%" onclick="saveItem()">Save to closet</button>
+      </div>
+    </section>
+
+    <section id="outfits" class="screen owner-only">
+      <div class="section-head"><h3>Outfit builder</h3><span>Tap a slot</span></div>
+      <div class="builder">
+        <div class="slot" data-slot="Top" onclick="openPicker('Top',this)"><div class="big">👚</div><span>Choose top</span></div>
+        <div class="slot" data-slot="Bottom" onclick="openPicker('Bottom',this)"><div class="big">👖</div><span>Choose bottom</span></div>
+        <div class="slot" data-slot="Shoes" onclick="openPicker('Shoes',this)"><div class="big">👟</div><span>Choose shoes</span></div>
+        <div class="slot" data-slot="Accessory" onclick="openPicker('Accessory',this)"><div class="big">👜</div><span>Choose extra</span></div>
+      </div>
+      <div class="actions"><button class="btn ghost" onclick="clearBuilder()">Clear</button><button class="btn primary" onclick="saveOutfit()">Save outfit</button></div>
+      <div class="section-head"><h3>Saved outfits</h3><span id="outfitCount"></span></div>
+      <div id="savedOutfits"></div>
+    </section>
+
+    <section id="share" class="screen owner-only">
+      <div class="section-head"><h3>Share with ChatGPT</h3><span>Read-only</span></div>
+      <div class="panel" id="sharePanel">
+        <div class="share-status">
+          <span class="dot" id="shareDot"></span>
+          <div><b id="shareStatusTitle">Not shared yet</b><div id="shareStatusText">Your wardrobe is still only on this device.</div></div>
+        </div>
+        <div class="share-actions">
+          <button class="btn primary" id="syncBtn" onclick="syncWardrobe()">☁️ Sync wardrobe</button>
+          <button class="btn ghost" id="copyBtn" onclick="copyShareLink()" disabled>🔗 Copy ChatGPT link</button>
+          <button class="btn danger" id="revokeBtn" onclick="revokeShare()" disabled>Revoke current link</button>
+        </div>
+        <div class="share-link" id="shareLinkBox" style="display:none"></div>
+        <div class="privacy">
+          <strong>How this works:</strong> the app creates a long random share ID and uploads a read-only copy of your current wardrobe to your Netlify site. Your private owner key stays in this browser and is required to update or revoke the share. Anyone who has the exact share link can view the shared wardrobe, so only send it where you intend to share it.
+          <br><br>
+          After adding or deleting clothes, tap <strong>Sync wardrobe</strong> again so the shared copy is current.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom owner-only" id="bottomNav">
+    <button class="nav active" data-screen="closet" onclick="go('closet')"><b>▦</b>Closet</button>
+    <button class="nav" data-screen="add" onclick="go('add')"><b>＋</b>Add</button>
+    <button class="nav" data-screen="outfits" onclick="go('outfits')"><b>✦</b>Outfits</button>
+    <button class="nav" data-screen="share" onclick="go('share')"><b>↗</b>Share</button>
+  </nav>
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target===this) closePicker()"><div class="sheet"><h3 id="pickerTitle">Choose item</h3><div id="picker" class="picker"></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const defaults=[
+  {id:1,name:'Ivory Knit Top',category:'Top',color:'Ivory',occasion:'Everyday',emoji:'👚'},
+  {id:2,name:'Vintage Blue Jeans',category:'Bottom',color:'Blue',occasion:'Everyday',emoji:'👖'},
+  {id:3,name:'Black Midi Dress',category:'Dress',color:'Black',occasion:'Going out',emoji:'👗'},
+  {id:4,name:'White Sneakers',category:'Shoes',color:'White',occasion:'Everyday',emoji:'👟'},
+  {id:5,name:'Camel Blazer',category:'Outerwear',color:'Camel',occasion:'Work',emoji:'🧥'},
+  {id:6,name:'Brown Shoulder Bag',category:'Bag',color:'Brown',occasion:'Everyday',emoji:'👜'}
+];
+let readOnly=false;
+let items=JSON.parse(localStorage.getItem('closetItems')||'null')||defaults;
+let outfits=JSON.parse(localStorage.getItem('closetOutfits')||'[]');
+let selected={}; let targetSlot=null; let activeFilter='All';
+let pendingImage='';
+const emojis={Top:'👚',Bottom:'👖',Dress:'👗',Shoes:'👟',Outerwear:'🧥',Bag:'👜',Accessory:'🕶️'};
+
+function persist(){if(readOnly)return;localStorage.setItem('closetItems',JSON.stringify(items));localStorage.setItem('closetOutfits',JSON.stringify(outfits));}
+function randomToken(bytes=24){const a=new Uint8Array(bytes);crypto.getRandomValues(a);return [...a].map(x=>x.toString(16).padStart(2,'0')).join('');}
+function getOwnerKey(){let k=localStorage.getItem('closetOwnerKey');if(!k){k=randomToken(32);localStorage.setItem('closetOwnerKey',k)}return k}
+function getShareId(){return localStorage.getItem('closetShareId')||''}
+function shareApiLink(){const id=getShareId();return id ? `${location.origin}/api/wardrobe?share=${encodeURIComponent(id)}` : ''}
+
+function go(id){
+  if(readOnly && id!=='closet') return;
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById(id); if(el) el.classList.add('active');
+  document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.screen===id));
+  document.getElementById('subtitle').textContent=id==='closet'?'Build looks from what you already own.':id==='add'?'Photograph it. Tag it. Style it later.':id==='share'?'Create a read-only wardrobe link for styling.':'Mix pieces and save the combinations you love.';
+  if(id==='outfits')renderOutfits(); if(id==='share')renderShare();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function render(){
+  const cats=['All',...new Set(items.map(i=>i.category))];
+  document.getElementById('filters').innerHTML=cats.map(c=>`<button class="chip ${c===activeFilter?'active':''}" onclick="filterBy('${escAttr(c)}')">${esc(c)}</button>`).join('');
+  let list=activeFilter==='All'?items:items.filter(i=>i.category===activeFilter);
+  document.getElementById('count').textContent=`${items.length} items`;
+  document.getElementById('closetGrid').innerHTML=list.length?list.map(card).join(''):'<div class="empty">No items in this category yet.</div>';
+}
+function card(i){return `<div class="item"><div class="thumb">${i.image?`<img src="${i.image}" alt="">`:`<div class="emoji">${i.emoji||emojis[i.category]||'👕'}</div>`}</div>${readOnly?'':`<button class="delete" onclick="deleteItem('${String(i.id)}')" aria-label="Delete">×</button>`}<div class="name">${esc(i.name)}</div><div class="meta">${esc(i.color||'')} · ${esc(i.occasion||'')}</div>${i.notes?`<div class="meta">${esc(i.notes)}</div>`:''}</div>`}
+function filterBy(c){activeFilter=c;render();}
+function deleteItem(id){if(readOnly)return;if(!confirm('Remove this item from your closet?'))return;items=items.filter(i=>String(i.id)!==String(id));outfits=outfits.map(o=>({...o,items:o.items.filter(i=>String(i.id)!==String(id))})).filter(o=>o.items.length>1);persist();render();renderOutfits();toast('Item removed. Sync again to update your shared wardrobe.');}
+
+async function preview(e){
+  const f=e.target.files[0];if(!f)return;
+  try{
+    pendingImage=await compressImage(f,900,.72);
+    const p=document.getElementById('preview');p.src=pendingImage;p.style.display='inline-block';
+  }catch(err){toast('Could not process that photo');}
+}
+function compressImage(file,maxSide=900,quality=.72){
+  return new Promise((resolve,reject)=>{
+    const img=new Image(); const url=URL.createObjectURL(file);
+    img.onload=()=>{
+      const scale=Math.min(1,maxSide/Math.max(img.width,img.height));
+      const w=Math.max(1,Math.round(img.width*scale)),h=Math.max(1,Math.round(img.height*scale));
+      const c=document.createElement('canvas');c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      URL.revokeObjectURL(url);resolve(c.toDataURL('image/jpeg',quality));
+    };
+    img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('image'))};img.src=url;
+  })
+}
+function saveItem(){
+  const name=document.getElementById('name').value.trim();if(!name){toast('Add a name first');return}
+  const category=document.getElementById('category').value;
+  items.unshift({id:String(Date.now()),name,category,color:document.getElementById('color').value.trim()||'Unspecified',occasion:document.getElementById('occasion').value,notes:document.getElementById('notes').value.trim(),image:pendingImage,emoji:emojis[category]});
+  persist();['name','color','notes'].forEach(id=>document.getElementById(id).value='');pendingImage='';const p=document.getElementById('preview');p.style.display='none';p.src='';document.getElementById('photo').value='';activeFilter='All';render();toast('Added. Sync when you want the shared copy updated.');go('closet');
+}
+function openPicker(category,slot){targetSlot=slot;let list=items.filter(i=>i.category===category);if(category==='Accessory') list=items.filter(i=>['Accessory','Bag','Outerwear'].includes(i.category));document.getElementById('pickerTitle').textContent='Choose '+category.toLowerCase();document.getElementById('picker').innerHTML=list.length?list.map(i=>`<div class="pick" onclick="choose('${String(i.id)}')"><div class="mini">${i.image?`<img src="${i.image}" alt="">`:(i.emoji||emojis[i.category])}</div><p>${esc(i.name)}</p></div>`).join(''):'<div class="empty" style="grid-column:1/-1">No matching items yet.</div>';document.getElementById('modal').classList.add('show')}
+function choose(id){const i=items.find(x=>String(x.id)===String(id));if(!i)return;const key=targetSlot.dataset.slot;selected[key]=i;targetSlot.innerHTML=i.image?`<img class="slotimg" src="${i.image}" alt=""><span>${esc(i.name)}</span>`:`<div class="big">${i.emoji||emojis[i.category]}</div><span>${esc(i.name)}</span>`;closePicker();}
+function closePicker(){document.getElementById('modal').classList.remove('show')}
+function clearBuilder(){selected={};document.querySelectorAll('.slot').forEach(s=>{const k=s.dataset.slot;const icons={Top:'👚',Bottom:'👖',Shoes:'👟',Accessory:'👜'};s.innerHTML=`<div class="big">${icons[k]}</div><span>Choose ${k==='Accessory'?'extra':k.toLowerCase()}</span>`});}
+function saveOutfit(){const vals=Object.values(selected);if(vals.length<2){toast('Choose at least 2 pieces');return}outfits.unshift({id:String(Date.now()),name:'Outfit '+(outfits.length+1),date:new Date().toLocaleDateString(),items:vals});persist();renderOutfits();toast('Outfit saved');clearBuilder();}
+function renderOutfits(){const el=document.getElementById('outfitCount');if(el)el.textContent=`${outfits.length} saved`;const list=document.getElementById('savedOutfits');if(!list)return;list.innerHTML=outfits.length?outfits.map(o=>`<div class="outfit-card"><div class="outfit-items">${o.items.slice(0,4).map(i=>`<div class="mini">${i.image?`<img src="${i.image}" alt="">`:(i.emoji||emojis[i.category]||'👕')}</div>`).join('')}</div><div class="outfit-title">${esc(o.name)}</div><div class="outfit-note">${esc(o.date)} · ${o.items.length} pieces</div></div>`).join(''):'<div class="empty">Your saved outfits will appear here.</div>'}
+
+function renderShare(){
+  if(readOnly)return;
+  const id=getShareId(), link=shareApiLink();
+  const on=!!id;
+  document.getElementById('shareDot').classList.toggle('on',on);
+  document.getElementById('shareStatusTitle').textContent=on?'Sharing is enabled':'Not shared yet';
+  document.getElementById('shareStatusText').textContent=on?'Sync after wardrobe changes to keep the shared copy current.':'Your wardrobe is still only on this device.';
+  document.getElementById('copyBtn').disabled=!on;document.getElementById('revokeBtn').disabled=!on;
+  const box=document.getElementById('shareLinkBox');box.style.display=on?'block':'none';box.textContent=link;
+}
+async function syncWardrobe(){
+  if(readOnly)return;
+  const panel=document.getElementById('sharePanel'),btn=document.getElementById('syncBtn');panel.classList.add('loading');btn.textContent='Syncing…';
+  let shareId=getShareId(); if(!shareId){shareId=randomToken(24);localStorage.setItem('closetShareId',shareId)}
+  try{
+    const res=await fetch('/api/wardrobe',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({shareId,ownerKey:getOwnerKey(),items,outfits,updatedAt:new Date().toISOString()})});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok) throw new Error(data.error||'Sync failed');
+    localStorage.setItem('closetLastSync',data.updatedAt||new Date().toISOString());renderShare();toast('Wardrobe synced. Your ChatGPT link is ready.');
+  }catch(e){console.error(e);toast(e.message||'Sync failed');}
+  finally{panel.classList.remove('loading');btn.textContent='☁️ Sync wardrobe';}
+}
+async function copyShareLink(){
+  const link=shareApiLink();if(!link)return;
+  try{await navigator.clipboard.writeText(link);toast('ChatGPT link copied');}
+  catch{prompt('Copy this link:',link);}
+}
+async function revokeShare(){
+  const id=getShareId();if(!id)return;if(!confirm('Revoke this share link? The shared wardrobe will no longer open.'))return;
+  const panel=document.getElementById('sharePanel');panel.classList.add('loading');
+  try{
+    const res=await fetch('/api/wardrobe',{method:'DELETE',headers:{'content-type':'application/json'},body:JSON.stringify({shareId:id,ownerKey:getOwnerKey()})});
+    const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error(data.error||'Could not revoke');
+    localStorage.removeItem('closetShareId');localStorage.removeItem('closetLastSync');renderShare();toast('Share link revoked');
+  }catch(e){toast(e.message||'Could not revoke');}
+  finally{panel.classList.remove('loading');}
+}
+
+async function loadSharedFromQuery(){
+  const p=new URLSearchParams(location.search), share=p.get('share');
+  if(!share)return false;
+  readOnly=true;
+  document.querySelectorAll('.owner-only').forEach(el=>el.style.display='none');
+  document.getElementById('readBanner').style.display='block';
+  document.getElementById('subtitle').textContent='Read-only shared wardrobe.';
+  try{
+    const res=await fetch(`/api/wardrobe?share=${encodeURIComponent(share)}`);
+    const data=await res.json();if(!res.ok)throw new Error(data.error||'Shared wardrobe unavailable');
+    items=Array.isArray(data.items)?data.items:[];outfits=Array.isArray(data.outfits)?data.outfits:[];activeFilter='All';render();return true;
+  }catch(e){items=[];render();document.getElementById('readBanner').innerHTML='<b>Shared wardrobe unavailable</b><br>This link may have been revoked or is invalid.';return true;}
+}
+function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2200)}
+function esc(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function escAttr(s){return String(s??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));}
+(async()=>{await loadSharedFromQuery();render();renderOutfits();renderShare();})();
+</script>
+</body>
+</html>
